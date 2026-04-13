@@ -56,6 +56,31 @@ void updatePrice(){
         out << name[i] << " " << price[i] << " " << time[i] << " " << stock[i] << endl;
     }
 }
+void customer(){
+    string name[MAX];
+    double price[MAX];
+    int time[MAX], stock[MAX];
+    int n;
+
+    loadMenu(name, price, time, stock, n);
+
+    double total = 0;
+    int choice;
+
+    do{
+        cin >> choice;
+        total += price[choice-1];
+
+        char more;
+        cin >> more;
+
+        if(more!='Y' && more!='y') break;
+
+    }while(true);
+
+    cout << "Total: " << total << endl;
+}
+
 
 int main(){
     int choice;
