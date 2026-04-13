@@ -81,6 +81,55 @@ void customer(){
     cout << "Total: " << total << endl;
 }
 
+void customer(){
+    string name[MAX];
+    double price[MAX];
+    int time[MAX], stock[MAX];
+    int n;
+
+    loadMenu(name, price, time, stock, n);
+
+    int popular[MAX] = {0};
+
+    double total = 0;
+    int choice;
+    char more;
+
+    do{
+        cin >> choice;
+
+        int i = choice-1;
+
+        if(stock[i] <= 0){
+            cout << "Out of stock\n";
+            continue;
+        }
+
+        stock[i]--;
+        popular[i]++;
+
+        total += price[i];
+
+        cin >> more;
+
+    }while(more=='Y'||more=='y');
+
+    int maxIndex = 0;
+    for(int j=1;j<n;j++){
+        if(popular[j] > popular[maxIndex]){
+            maxIndex = j;
+        }
+    }
+
+    cout << "Popular: " << name[maxIndex] << endl;
+
+    double pay;
+    cin >> pay;
+
+    while(pay != total){
+        cin >> pay;
+    }
+
 
 int main(){
     int choice;
