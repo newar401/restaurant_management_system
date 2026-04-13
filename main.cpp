@@ -32,12 +32,29 @@ void addFood(){
     double price;
     int time, stock;
 
-    cout << "Name: "; cin >> name;
-    cout << "Price: "; cin >> price;
-    cout << "Time: "; cin >> time;
-    cout << "Stock: "; cin >> stock;
+    cin >> name >> price >> time >> stock;
 
     out << name << " " << price << " " << time << " " << stock << endl;
+}
+
+void updatePrice(){
+    string name[MAX];
+    double price[MAX];
+    int time[MAX], stock[MAX];
+    int n;
+
+    loadMenu(name, price, time, stock, n);
+
+    int choice;
+    cin >> choice;
+
+    cin >> price[choice-1];
+
+    ofstream out("MenuFood.txt");
+
+    for(int i=0;i<n;i++){
+        out << name[i] << " " << price[i] << " " << time[i] << " " << stock[i] << endl;
+    }
 }
 
 int main(){
@@ -45,7 +62,13 @@ int main(){
     cin >> choice;
 
     if(choice == 1){
-        if(login()) addFood();
+        if(login()){
+            int m;
+            cin >> m;
+
+            if(m == 1) addFood();
+            else if(m == 2) updatePrice();
+        }
     }
     else if(choice == 2){
         string name[MAX];
