@@ -3,34 +3,49 @@
 #include <string>
 using namespace std;
 
+const int FOOD = 15;
+const int COL = 4;
+
 int main(){
-    ofstream out("MenuFood.txt", ios::app);
+    string menu[FOOD][COL];
+    int count = 0;
 
-    string name;
-    double price;
-    int time, stock;
-    char ch;
+    ifstream in("MenuFood.txt");
 
-    do{
-        cin.ignore();
-        cout << "Food name: ";
-        getline(cin, name);
+    while(getline(in, menu[count][0], '\t') &&
+          getline(in, menu[count][1], '\t') &&
+          getline(in, menu[count][2], ' ') &&
+          getline(in, menu[count][3]))
+    {
+        count++;
+    }
+    in.close();
 
-        cout << "Price: ";
-        cin >> price;
+    for(int i = 0; i < count; i++){
+        cout << i+1 << ". " << menu[i][0]
+             << " RM " << menu[i][1] << endl;
+    }
 
-        cout << "Time: ";
-        cin >> time;
+    int choice;
+    double newPrice;
 
-        cout << "Stock: ";
-        cin >> stock;
+    cout << "Select item: ";
+    cin >> choice;
 
-        out << "\n" << name << "\t" << price << "\t" << time << " " << stock;
+    cout << "New price: ";
+    cin >> newPrice;
 
-        cout << "Add more? (Y/N): ";
-        cin >> ch;
+    ofstream out("MenuFood.txt");
 
-    }while(ch == 'Y' || ch == 'y');
+    for(int i = 0; i < count; i++){
+        if(i == choice-1){
+            out << menu[i][0] << "\t" << newPrice << "\t"
+                << menu[i][2] << " " << menu[i][3] << endl;
+        } else {
+            out << menu[i][0] << "\t" << menu[i][1] << "\t"
+                << menu[i][2] << " " << menu[i][3] << endl;
+        }
+    }
 
     return 0;
 }
