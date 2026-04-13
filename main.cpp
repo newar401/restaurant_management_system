@@ -3,28 +3,34 @@
 #include <string>
 using namespace std;
 
-const int FOOD = 15;
-const int COL = 4;
-
 int main(){
-    string menu[FOOD][COL];
-    int count = 0;
+    ofstream out("MenuFood.txt", ios::app);
 
-    ifstream inFile("MenuFood.txt");
+    string name;
+    double price;
+    int time, stock;
+    char ch;
 
-    while(count < FOOD &&
-          getline(inFile, menu[count][0], '\t') &&
-          getline(inFile, menu[count][1], '\t') &&
-          getline(inFile, menu[count][2], ' ') &&
-          getline(inFile, menu[count][3]))
-    {
-        count++;
-    }
+    do{
+        cin.ignore();
+        cout << "Food name: ";
+        getline(cin, name);
 
-    for(int i = 0; i < count; i++){
-        cout << i+1 << ". " << menu[i][0]
-             << " RM " << menu[i][1] << endl;
-    }
+        cout << "Price: ";
+        cin >> price;
+
+        cout << "Time: ";
+        cin >> time;
+
+        cout << "Stock: ";
+        cin >> stock;
+
+        out << "\n" << name << "\t" << price << "\t" << time << " " << stock;
+
+        cout << "Add more? (Y/N): ";
+        cin >> ch;
+
+    }while(ch == 'Y' || ch == 'y');
 
     return 0;
 }
