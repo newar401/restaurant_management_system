@@ -25,10 +25,29 @@ void loadMenu(string name[], double price[], int time[], int stock[], int &n){
     ifstream in("MenuFood.txt");
     n = 0;
 
-    while(in >> name[n] >> price[n] >> time[n] >> stock[n]){
+    if(!in){
+        cout << "Menu file not found!\n";
+        return;
+    }
+
+    while(n < MAX && in >> name[n] >> price[n] >> time[n] >> stock[n]){
         n++;
     }
     in.close();
+}
+
+// SAVE MENU
+void saveMenu(string name[], double price[], int time[], int stock[], int n){
+    ofstream out("MenuFood.txt");
+
+    for(int i=0;i<n;i++){
+        out << name[i] << " "
+            << price[i] << " "
+            << time[i] << " "
+            << stock[i] << endl;
+    }
+
+    out.close();
 }
 
 // SHOW MENU
@@ -58,7 +77,8 @@ void addFood(){
 
     do{
         cout << "Name: ";
-        cin >> name;
+        cin >> ws;
+        getline(cin, name);
 
         cout << "Price: ";
         cin >> price;
@@ -101,16 +121,8 @@ void updatePrice(){
     cout << "New price: ";
     cin >> price[choice-1];
 
-    ofstream out("MenuFood.txt");
+    saveMenu(name, price, time, stock, n);
 
-    for(int i=0;i<n;i++){
-        out << name[i] << " "
-            << price[i] << " "
-            << time[i] << " "
-            << stock[i] << endl;
-    }
-
-    out.close();
     cout << "Price updated!\n";
 }
 
@@ -162,7 +174,11 @@ void customer(){
 
     }while(more=='Y'||more=='y');
 
-    // MOST POPULAR
+    if(total == 0){
+        cout << "No orders made.\n";
+        return;
+    }
+
     int maxIndex = 0;
     for(int j=1;j<n;j++){
         if(popular[j] > popular[maxIndex]){
@@ -170,20 +186,21 @@ void customer(){
         }
     }
 
-    // PAYMENT
     double pay;
     cout << "Enter payment: ";
     cin >> pay;
 
-    while(pay != total){
-        cout << "Enter exact amount: ";
+    while(pay < total){
+        cout << "Insufficient amount. Enter again: ";
         cin >> pay;
     }
 
     cout << "Payment successful!\n";
+    cout << "Change: RM " << pay - total << endl;
     cout << "Most popular dish: " << name[maxIndex] << endl;
 
-    // SAVE OUTPUT
+    saveMenu(name, price, time, stock, n);
+
     ofstream out("OutputFile.txt");
     out << "Total: RM " << total << endl;
     out << "Delivery Time: " << totalTime << endl;
@@ -195,32 +212,34 @@ void customer(){
 int main(){
     int choice;
 
-    cout << "==============================\n";
-    cout << "   RESTAURANT SYSTEM\n";
-    cout << "==============================\n";
-    cout << "1. Manager\n";
-    cout << "2. Customer\n";
-    cout << "3. Exit\n";
-    cout << "==============================\n";
+    do{
+        cout << "\n==============================\n";
+        cout << "   RESTAURANT SYSTEM\n";
+        cout << "==============================\n";
+        cout << "1. Manager\n";
+        cout << "2. Customer\n";
+        cout << "3. Exit\n";
+        cout << "==============================\n";
 
-    cin >> choice;
+        cin >> choice;
 
-    if(choice == 1){
-        if(login()){
-            int m;
-            cout << "1. Add Food\n2. Update Price\n";
-            cin >> m;
+        if(choice == 1){
+            if(login()){
+                int m;
+                cout << "1. Add Food\n2. Update Price\n";
+                cin >> m;
 
-            if(m == 1) addFood();
-            else if(m == 2) updatePrice();
+                if(m == 1) addFood();
+                else if(m == 2) updatePrice();
+            }
         }
-    }
-    else if(choice == 2){
-        customer();
-    }
-    else{
-        cout << "Thank you!\n";
-    }
+        else if(choice == 2){
+            customer();
+        }
+
+    }while(choice != 3);
+
+    cout << "Thank you!\n";
 
     return 0;
 }
